@@ -1,0 +1,32 @@
+#define RCC_AHB1ENR (*(volatile unsigned int*)0x40023830)
+#define GPIOD_BASE  (*(volatile unsigned int*)0x40020C00)
+#define GPIOD_MODER (*(volatile unsigned int*)(0x40020C00))
+#define GPIOD_ODR   (*(volatile unsigned int*)(0x40020C14))
+
+void ms_delay(volatile unsigned int);
+
+void main()
+{
+//	RCC_AHB1ENR &= ~(1<<3); //Clear clock
+	RCC_AHB1ENR |=  (1<<3); // Enable clock for GPIOD
+
+	GPIOD_MODER &= ~(3<<(13*2));// clear
+	GPIOD_MODER |=  (1<<(13*2)); // set as output in Moder
+
+//	GPIOD_ODR &= ~ (1<<13); // clear ODR
+
+	while(1)
+	{
+		GPIOD_ODR^=(1<<13); // Toggle Led Orange
+		ms_delay(16000000);
+	}
+
+}
+
+void ms_delay(volatile unsigned int s)
+{
+	for(volatile unsigned int i=0;i<s;i++); // delay function
+}
+
+
+
